@@ -1,8 +1,8 @@
-node-gyp
+jet-gyp
 =========
-### Node.js native addon build tool
+### Jet Streaming Framework(Node.js) native addon build tool
 
-`node-gyp` is a cross-platform command-line tool written in Node.js for compiling
+`jet-gyp` is a cross-platform command-line tool written in Node.js for compiling
 native addon modules for Node.js.  It bundles the [gyp](https://gyp.gsrc.io)
 project used by the Chromium team and takes away the pain of dealing with the
 various differences in build platforms. It is the replacement to the `node-waf`
@@ -12,7 +12,7 @@ to support the latest versions of node.
 
 Multiple target versions of node are supported (i.e. `0.8`, ..., `4`, `5`, `6`,
 etc.), regardless of what version of node is actually installed on your system
-(`node-gyp` downloads the necessary development files or headers for the target version).
+(`jet-gyp` downloads the necessary development files or headers for the target version).
 
 #### Features:
 
@@ -27,7 +27,7 @@ Installation
 You can install with `npm`:
 
 ``` bash
-$ npm install -g node-gyp
+$ npm install -g jet-gyp
 ```
 
 You will also need to install:
@@ -57,13 +57,13 @@ You will also need to install:
     If the above steps didn't work for you, please visit [Microsoft's Node.js Guidelines for Windows](https://github.com/Microsoft/nodejs-guidelines/blob/master/windows-environment.md#compiling-native-addon-modules) for additional tips.
 
 If you have multiple Python versions installed, you can identify which Python
-version `node-gyp` uses by setting the '--python' variable:
+version `jet-gyp` uses by setting the '--python' variable:
 
 ``` bash
-$ node-gyp --python /path/to/python2.7
+$ jet-gyp --python /path/to/python2.7
 ```
 
-If `node-gyp` is called by way of `npm` *and* you have multiple versions of
+If `jet-gyp` is called by way of `npm` *and* you have multiple versions of
 Python installed, then you can set `npm`'s 'python' config key to the appropriate
 value:
 
@@ -88,7 +88,7 @@ The next step is to generate the appropriate project build files for the current
 platform. Use `configure` for that:
 
 ``` bash
-$ node-gyp configure
+$ jet-gyp configure
 ```
 
 __Note__: The `configure` step looks for the `binding.gyp` file in the current
@@ -98,7 +98,7 @@ Now you will have either a `Makefile` (on Unix platforms) or a `vcxproj` file
 (on Windows) in the `build/` directory. Next invoke the `build` command:
 
 ``` bash
-$ node-gyp build
+$ jet-gyp build
 ```
 
 Now you have your compiled `.node` bindings file! The compiled bindings end up
@@ -136,13 +136,13 @@ Some additional resources for addons and writing `gyp` files:
  * ["Hello World" node addon example](https://github.com/nodejs/node/tree/master/test/addons/hello-world)
  * [gyp user documentation](https://gyp.gsrc.io/docs/UserDocumentation.md)
  * [gyp input format reference](https://gyp.gsrc.io/docs/InputFormatReference.md)
- * [*"binding.gyp" files out in the wild* wiki page](https://github.com/nodejs/node-gyp/wiki/%22binding.gyp%22-files-out-in-the-wild)
+ * [*"binding.gyp" files out in the wild* wiki page](https://github.com/nodejs/jet-gyp/wiki/%22binding.gyp%22-files-out-in-the-wild)
 
 
 Commands
 --------
 
-`node-gyp` responds to the following commands:
+`jet-gyp` responds to the following commands:
 
 | **Command**   | **Description**
 |:--------------|:---------------------------------------------------------------
@@ -159,7 +159,7 @@ Commands
 Command Options
 --------
 
-`node-gyp` accepts the following command options:
+`jet-gyp` accepts the following command options:
 
 | **Command**                       | **Description**
 |:----------------------------------|:------------------------------------------

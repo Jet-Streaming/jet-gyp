@@ -1,6 +1,6 @@
 {
-  "name": "node-gyp",
-  "description": "Node.js native addon build tool",
+  "name": "jet-gyp",
+  "description": "Jet Streaming Framework(Node.js) native addon build tool",
   "license": "MIT",
   "keywords": [
     "native",
@@ -16,11 +16,11 @@
   "author": "Nathan Rajlich <nathan@tootallnate.net> (http://tootallnate.net)",
   "repository": {
     "type": "git",
-    "url": "git://github.com/nodejs/node-gyp.git"
+    "url": "git://github.com/Jet-Streaming/jet-gyp.git"
   },
   "preferGlobal": true,
-  "bin": "./bin/node-gyp.js",
-  "main": "./lib/node-gyp.js",
+  "bin": "./bin/jet-gyp.js",
+  "main": "./lib/jet-gyp.js",
   "dependencies": {
     "fstream": "^1.0.0",
     "glob": "^7.0.3",

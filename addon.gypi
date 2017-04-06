@@ -17,7 +17,7 @@
 
     'include_dirs': [
       '<(node_root_dir)/include/node',
-      '<(node_root_dir)/src',
+      '<(node_root_dir)/src/bes/nodejs',
       '<(node_root_dir)/deps/uv/include',
       '<(node_root_dir)/<(node_engine_include_dir)'
     ],
@@ -109,7 +109,9 @@
           '-luuid.lib',
           '-lodbc32.lib',
           '-lDelayImp.lib',
-          '-l"<(node_root_dir)/$(ConfigurationName)/<(node_lib_file)"'
+          #'-l"<(node_root_dir)/$(ConfigurationName)/<(node_lib_file)"'
+          '-l"<(node_root_dir)/$(ConfigurationName)/jet.lib"',
+          '-l"<(node_root_dir)/$(ConfigurationName)/jet-nodejs.lib"',
         ],
         'msvs_disabled_warnings': [
           # warning C4251: 'node::ObjectWrap::handle_' : class 'v8::Persistent<T>'
