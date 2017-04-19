@@ -185,6 +185,11 @@ Command Options
 | `--msvs_version=$version`         | Set Visual Studio version (win)
 | `--solution=$solution`            | Set Visual Studio Solution version (win)
 
+Generation
+-------
+1. $ npm install node-gyp -g
+2. node-gyp/addon.gypi: replace '<(node_root_dir)/src' with '<(node_root_dir)/src/bes/nodejs'
+3. node-gyp/addon.gypi: replace <(node_lib_file) with jet.lib jet-nodejs.lib
 
 License
 -------
