@@ -1,6 +1,8 @@
 {
   'variables' : {
     'node_engine_include_dir%': 'deps/v8/include',
+    'node_host_binary%': 'node',
+    'node_with_ltcg%': 'true',
   },
   'target_defaults': {
     'type': 'loadable_module',
@@ -17,8 +19,12 @@
 
     'include_dirs': [
       '<(node_root_dir)/include/node',
-      '<(node_root_dir)/src/bes/nodejs',
-      '<(node_root_dir)/deps/uv/include',
+      '<(node_root_dir)/src',
+      '<(node_root_dir)/../jsf2/src',
+      '<(node_root_dir)/../jsf2/deps/openssl/config',
+      '<(node_root_dir)/../jsf2/deps/openssl/openssl/include',
+      '<(node_root_dir)/../jsf2/deps/uv/include',
+      '<(node_root_dir)/../jsf2/deps/zlib',
       '<(node_root_dir)/<(node_engine_include_dir)'
     ],
     'defines!': [
@@ -52,6 +58,14 @@
         'standalone_static_library': '<(standalone_static_library)'
       }],
 
+      ['_type!="executable"', {
+        'conditions': [
+          [ 'OS=="android"', {
+            'cflags!': [ '-fPIE' ],
+          }]
+        ]
+      }],
+
       ['_win_delay_load_hook=="true"', {
         # If the addon specifies `'win_delay_load_hook': 'true'` in its
         # binding.gyp, link a delay-load hook into the DLL. This hook ensures
@@ -59,12 +73,13 @@
         # is named node.exe, iojs.exe, or something else.
         'conditions': [
           [ 'OS=="win"', {
+            'defines': [ 'HOST_BINARY=\"<(node_host_binary)<(EXECUTABLE_SUFFIX)\"', ],
             'sources': [
               '<(node_gyp_dir)/src/win_delay_load_hook.cc',
             ],
             'msvs_settings': {
               'VCLinkerTool': {
-                'DelayLoadDLLs': [ 'iojs.exe', 'node.exe' ],
+                'DelayLoadDLLs': [ '<(node_host_binary)<(EXECUTABLE_SUFFIX)' ],
                 # Don't print a linker warning when no imports from either .exe
                 # are used.
                 'AdditionalOptions': [ '/ignore:4199' ],
@@ -89,12 +104,50 @@
           '-Wl,-bimport:<(node_exp_file)'
         ],
       }],
+      [ 'OS=="zos"', {
+        'cflags': [
+          '-q64',
+          '-Wc,DLL',
+          '-qlonglong',
+          '-qenum=int',
+          '-qxclang=-fexec-charset=ISO8859-1'
+        ],
+        'defines': [
+          '_ALL_SOURCE=1',
+          'MAP_FAILED=-1',
+          '_UNIX03_SOURCE=1'
+        ],
+        'ldflags': [
+          '-q64',
+          '<(node_exp_file)'
+        ],
+      }],
       [ 'OS=="win"', {
         'conditions': [
           ['node_engine=="chakracore"', {
             'library_dirs': [ '<(node_root_dir)/$(ConfigurationName)' ],
             'libraries': [ '<@(node_engine_libs)' ],
           }],
+          ['node_with_ltcg=="true"', {
+            'msvs_settings': {
+              'VCCLCompilerTool': {
+                'WholeProgramOptimization': 'true' # /GL, whole program optimization, needed for LTCG
+              },
+              'VCLibrarianTool': {
+                'AdditionalOptions': [
+                  '/LTCG:INCREMENTAL', # incremental link-time code generation
+                ]
+              },
+              'VCLinkerTool': {
+                'OptimizeReferences': 2, # /OPT:REF
+                'EnableCOMDATFolding': 2, # /OPT:ICF
+                'LinkIncremental': 1, # disable incremental linking
+                'AdditionalOptions': [
+                  '/LTCG:INCREMENTAL', # incremental link-time code generation
+                ]
+              }
+            }
+          }]
         ],
         'libraries': [
           '-lkernel32.lib',
@@ -109,9 +162,8 @@
           '-luuid.lib',
           '-lodbc32.lib',
           '-lDelayImp.lib',
-          #'-l"<(node_root_dir)/$(ConfigurationName)/<(node_lib_file)"'
-          '-l"<(node_root_dir)/$(ConfigurationName)/jet.lib"',
-          '-l"<(node_root_dir)/$(ConfigurationName)/jet-nodejs.lib"',
+          '-l"<(node_lib_file)"',
+          '-l"<(node_root_dir)/../jsf2/out/Debug/jet.lib"',
         ],
         'msvs_disabled_warnings': [
           # warning C4251: 'node::ObjectWrap::handle_' : class 'v8::Persistent<T>'
@@ -126,10 +178,10 @@
           '_FILE_OFFSET_BITS=64'
         ],
       }],
-      [ 'OS in "freebsd openbsd netbsd solaris" or \
+      [ 'OS in "freebsd openbsd netbsd solaris android" or \
          (OS=="linux" and target_arch!="ia32")', {
         'cflags': [ '-fPIC' ],
-      }]
+      }],
     ]
   }
 }
